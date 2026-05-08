@@ -1,0 +1,2334 @@
+/* RESET & CUSTOM PROPERTIES */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* Surface tokens: warm beige / cream palette (academic press feel) */
+  --bg:          #faf7f0;
+  --bg-alt:      #f2ece0;
+  --surface:     #fdfbf6;
+  --surface-hi:  #fffefa;
+
+  /* Text tokens: warm toned ladder, not cool gray */
+  --text:        #1a1612;
+  --text-soft:   #3a3328;
+  --text-muted:  #78695a;
+  --text-faint:  #b2a390;
+
+  /* Accent: warm terracotta / sienna, harmonized with cream */
+  --accent:      #b5552a;
+  --accent-rgb:  181, 85, 42;
+  --accent-soft: rgba(181, 85, 42, 0.09);
+  --accent-line: rgba(181, 85, 42, 0.28);
+
+  /* Borders: warm tinted so they sit naturally on cream */
+  --border:      rgba(60, 45, 25, 0.13);
+  --border-hi:   rgba(60, 45, 25, 0.22);
+  --hairline:    rgba(60, 45, 25, 0.06);
+
+  /* Shadows: soft, cool toned, single direction */
+  --shadow-xs:   0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-sm:   0 2px 6px -1px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md:   0 8px 24px -8px rgba(15, 23, 42, 0.12), 0 2px 6px -2px rgba(15, 23, 42, 0.06);
+  --shadow-lg:   0 20px 40px -16px rgba(15, 23, 42, 0.18), 0 4px 12px -4px rgba(15, 23, 42, 0.08);
+
+  /* Layout: one unified content column across the whole site.
+   * --max-w 848px with --pad-x 24px on each side gives a content
+   * width of exactly 800px — used for the abstract, every section,
+   * every task, the FAQ, team, etc. The teaser figure (1080px) is
+   * the one element that extrudes beyond this measure. */
+  --max-w:       848px;
+  --pad-x:       24px;
+  --tab-active:  var(--accent);
+  --task-bleed:  0px;
+  --video-bleed: 0px;
+
+  /* Motion */
+  --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* Spacing scale. One ladder used throughout the site so section,
+   * subsection, row and item gaps nest cleanly instead of drifting. */
+  --space-xs:    8px;
+  --space-sm:    16px;
+  --space-md:    24px;
+  --space-lg:    48px;
+  --space-xl:    80px;
+  --space-2xl:   128px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 17px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  /* Inter OpenType stylistic sets: ss01 (alt a), cv11 (straight-leg R), calt (contextual alternates) */
+  font-feature-settings: "ss01", "cv11", "cv05", "kern", "liga", "calt";
+  font-variation-settings: normal;
+  overflow-x: clip;
+}
+
+::selection {
+  background: rgba(var(--accent-rgb), 0.16);
+  color: var(--text);
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 10px;
+  border: 2px solid var(--bg);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--border-hi); }
+
+/* LAYOUT */
+.container {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 var(--pad-x);
+}
+
+/* Every <section> is the main content column */
+section {
+  width: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 24px var(--pad-x);
+}
+
+@media (max-width: 768px) {
+  section { padding: 20px var(--pad-x); }
+}
+
+
+/* TYPOGRAPHY */
+h1, h2, h3, h4 {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+h2 {
+  font-size: clamp(1.55rem, 2.6vw, 1.9rem);
+  font-weight: 700;
+  letter-spacing: -0.024em;
+  margin-bottom: 0.8rem;
+  position: relative;
+  padding-bottom: 0.55rem;
+}
+
+h2::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 32px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 1px;
+}
+
+/* Unified subsection heading: one size across task subsections, method
+ * rows, and benchmark blocks so peer-level titles read at the same weight. */
+h3 {
+  font-size: 1.4rem;
+  font-weight: 650;
+  letter-spacing: -0.018em;
+  margin-bottom: 0.75rem;
+}
+
+h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+p { margin-bottom: 1rem; }
+p:last-child { margin-bottom: 0; }
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 2px; }
+
+strong { font-weight: 600; color: var(--text); }
+
+code {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.88em;
+  padding: 0.08em 0.34em;
+  background: var(--hairline);
+  border-radius: 3px;
+  color: var(--text);
+}
+
+/* Inline highlight: subtle accent-tinted wash behind a phrase, like a
+   highlighter pen in the site's warm palette. Works inside body text. */
+.highlight {
+  background: rgba(var(--accent-rgb), 0.15);
+  color: var(--text);
+  font-weight: 500;
+  padding: 0 0.28em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* Eyebrow label above section titles (two line hierarchy) */
+.section-label {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.7rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-label::before {
+  content: '';
+  width: 14px;
+  height: 1.5px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+.body-text {
+  color: var(--text-soft);
+  font-size: 1.125rem;
+  line-height: 1.72;
+  text-align: justify;
+  text-align-last: left;
+}
+
+/* Prose typography: smoother ragged-right edge without aggressive word
+ * breaks. `text-wrap: pretty` lets the browser pick better line ends
+ * globally; `hyphens: auto` is allowed but gated by
+ * `hyphenate-limit-chars: 10 4 4` so only ≥10-char words break, with at
+ * least 4 characters on each side of the hyphen. In practice that means
+ * hyphenation is rare but kicks in when the ragged edge would otherwise
+ * look too jagged. */
+.body-text,
+#abstract p,
+.subsection-intro,
+.tf-descriptions p,
+.benchmark-caption,
+.faq-answer p,
+figcaption {
+  text-wrap: pretty;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphenate-limit-chars: 10 4 4;
+}
+
+/* Section lede paragraph (first .body-text directly under a section) */
+section > .body-text { margin-bottom: 2rem; }
+
+/* Numeric precision: tabular figures where they matter */
+.tabular { font-variant-numeric: tabular-nums; }
+
+/* STICKY TOC NAV
+ * Thin vertical rail with circular markers per section.
+ * Inactive: hollow muted dot. Active: filled accent dot with halo.
+ */
+#toc-nav {
+  position: fixed;
+  left: 26px;
+  top: 50%;
+  width: 180px;
+  z-index: 100;
+  background: transparent;
+  transform: translateX(-130%) translateY(-50%);
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+#toc-nav.visible {
+  transform: translateX(0) translateY(-50%);
+  pointer-events: auto;
+}
+
+/* Vertical rail */
+#toc-nav::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 6px;
+  bottom: 6px;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--border) 12%,
+    var(--border) 88%,
+    transparent 100%
+  );
+}
+
+.toc-inner {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.toc-title {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  opacity: 0.55;
+  padding: 0 0 14px 20px;
+  margin: 0;
+}
+
+.toc-link {
+  position: relative;
+  display: block;
+  padding: 7px 8px 7px 20px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text-muted);
+  text-decoration: none;
+  white-space: normal;
+  line-height: 1.4;
+  transition: color 0.22s ease, padding-left 0.22s ease;
+}
+
+/* Nested sublinks (e.g., Cross-Trial / In-Trial under MemMimic): indented
+ * from the rail so the hierarchy is visible, smaller dot marker. */
+.toc-link.toc-sublink {
+  padding-left: 34px;
+  font-size: 0.74rem;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.toc-link.toc-sublink::before {
+  left: 15px;
+  width: 5px;
+  height: 5px;
+  border-width: 1px;
+}
+.toc-link.toc-sublink:hover::before,
+.toc-link.toc-sublink.active::before {
+  width: 7px;
+  height: 7px;
+  left: 14px;
+}
+
+/* When a sublink is active, underline it so the subsection reads as
+ * distinct from the parent "MemMimic" (which shares the accent dot). */
+.toc-link.toc-sublink.active {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--accent);
+}
+
+/* Dot marker (sits on the rail) */
+.toc-link::before {
+  content: "";
+  position: absolute;
+  left: 1px;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  transform: translateY(-50%);
+  transition: background 0.22s ease, border-color 0.22s ease,
+              width 0.22s ease, height 0.22s ease,
+              left 0.22s ease, box-shadow 0.22s ease;
+}
+
+.toc-link:hover {
+  color: var(--text);
+}
+
+.toc-link:hover::before {
+  border-color: var(--text-muted);
+  width: 9px;
+  height: 9px;
+  left: 0px;
+}
+
+.toc-link.active {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.toc-link.active::before {
+  background: var(--accent);
+  border-color: var(--accent);
+  width: 9px;
+  height: 9px;
+  left: 0px;
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.14);
+}
+
+@media (max-width: 1180px) {
+  #toc-nav {
+    left: 14px;
+    width: 162px;
+  }
+}
+
+/* HERO TITLE CARD */
+/* Full-viewport hero: title, authors, institution, tagline, buttons fill
+ * the first screen. Next section (#intro-split) starts on the second. */
+#hero-title {
+  background: var(--bg);
+  text-align: center;
+  padding: 96px var(--pad-x) 40px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Publish / update timestamp, mono-cased and faint under the institution. */
+#hero-title .pub-meta {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin: 0.2rem 0 1.8rem;
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.55rem;
+  font-weight: 500;
+  justify-content: center;
+}
+#hero-title .pub-meta time { font-variant-numeric: tabular-nums; color: inherit; }
+#hero-title .pub-meta-sep { opacity: 0.55; }
+#hero-title .pub-meta-updated { opacity: 0.78; }
+
+#hero-title .paper-title {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: clamp(2.8rem, 6.8vw, 4.8rem);
+  font-weight: 800;
+  font-style: normal;
+  letter-spacing: -0.042em;
+  margin: 0 auto 1.1rem;
+  line-height: 1.1;
+  color: var(--text);
+  max-width: 900px;
+  padding: 0.05em 0;
+}
+
+.hero-tagline {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 1.125rem;
+  font-weight: 400;
+  color: var(--text-soft);
+  max-width: 620px;
+  margin: 0.75rem auto 2rem;
+  line-height: 1.6;
+  letter-spacing: -0.005em;
+  text-align: justify;
+  text-align-last: left;}
+
+
+#hero-title .authors {
+  font-size: 1.2rem;
+  color: var(--text-soft);
+  font-weight: 450;
+  margin-bottom: 0.4rem;
+  letter-spacing: -0.005em;
+}
+
+#hero-title .authors a {
+  color: inherit;
+  text-decoration: none;
+  position: relative;
+  transition: color 0.18s ease;
+}
+
+#hero-title .authors a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.25s var(--ease-out);
+}
+
+#hero-title .authors a:hover {
+  color: var(--text);
+}
+
+#hero-title .authors a:hover::after {
+  transform: scaleX(1);
+}
+
+#hero-title .institution {
+  font-size: 1.15rem;
+  color: var(--text-muted);
+  letter-spacing: 0;
+  margin-bottom: 0.5rem;
+}
+
+.link-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 22px 10px 20px;
+  border: 1px solid var(--border-hi);
+  border-radius: 100px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: var(--text);
+  text-decoration: none;
+  background: var(--surface);
+  overflow: hidden;
+  transition: border-color 0.25s var(--ease-out),
+              background 0.25s var(--ease-out),
+              color 0.25s var(--ease-out),
+              padding 0.25s var(--ease-out);
+}
+
+/* Sliding arrow indicator: slides in from the right on hover */
+.btn-link::after {
+  content: '→';
+  position: absolute;
+  right: 16px;
+  opacity: 0;
+  transform: translateX(-4px);
+  font-weight: 400;
+  transition: opacity 0.25s var(--ease-out), transform 0.25s var(--ease-out);
+}
+
+.btn-link:hover {
+  border-color: var(--text);
+  background: var(--text);
+  color: var(--bg);
+  padding-right: 34px;
+  text-decoration: none;
+}
+
+.btn-link:hover::after {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.btn-link:active {
+  background: #2a231b;
+}
+
+.btn-link svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.btn-link:hover svg {
+  opacity: 1;
+}
+
+/* Brand-mark icons (e.g., HF) keep their own colors and full opacity */
+.btn-link .hf-logo,
+.btn-link:hover .hf-logo {
+  width: 18px;
+  height: 18px;
+  opacity: 1;
+  flex-shrink: 0;
+  display: block;
+}
+
+.btn-link .arxiv-logo,
+.btn-link:hover .arxiv-logo {
+  width: 13px;
+  height: auto;
+  opacity: 1;
+  flex-shrink: 0;
+  display: block;
+}
+
+
+/* ABSTRACT (folded into the hero, below the buttons).
+ * Matches section *content* width (--max-w minus 2 * --pad-x) so the
+ * abstract text and the tasks, method, FAQ, etc. all align to the same
+ * measure. Teaser figure inside extrudes beyond. */
+#abstract {
+  max-width: calc(var(--max-w) - var(--pad-x) * 2);
+  margin: 1.6rem auto 0;
+  text-align: justify;
+  text-align-last: left;}
+
+#abstract > p {
+  margin: 0;
+  text-align: justify;
+  text-align-last: left;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphenate-limit-chars: 10 4 4;
+  font-size: 0.96rem;
+  color: var(--text-soft);
+  line-height: 1.6;
+}
+
+#abstract > p + p {
+  margin-top: 0.6rem;
+}
+
+/* FIGURES & MEDIA */
+figure { margin: 0; }
+
+/* Every on page video lives inside a <figure>. This rule replaces the
+   inline style="width:100%;border-radius:6px;" that used to sit on each. */
+figure video {
+  width: 100%;
+  border-radius: 6px;
+  display: block;
+}
+
+/* Each video renders at its source clip's native aspect ratio. Heights
+ * will differ per subsection (casting/flinging clips are 4:3 and render
+ * taller; pushing clips are 16:9 and render shorter), but nothing is
+ * cropped and no letterbox bars appear. */
+.video-grid figure video {
+  aspect-ratio: auto;
+  object-fit: fill;
+}
+
+figcaption {
+  font-size: 0.85rem;
+  font-style: normal;
+  color: var(--text-muted);
+  text-align: justify;
+  text-align-last: left;  margin-top: 0.85rem;
+  line-height: 1.6;
+  letter-spacing: -0.005em;
+}
+
+/* Inline math color helpers used in figure captions */
+.math-gray { color: var(--text-muted); font-style: normal; }
+.math-blue { color: #0062FF; font-style: normal; }
+
+/* Centered full-width figures (architecture, gating diagram, robomimic chart) */
+.fig-centered {
+  max-width: 600px;
+  margin: 0 auto 1rem;
+}
+
+.fig-centered img { width: 100%; }
+
+#attention {
+  padding-top: 12px;
+  padding-bottom: 16px;
+}
+
+#attention .tab-panel figure {
+  max-width: 720px;
+  margin: 0 auto 1rem;
+}
+
+/* Attention-viz captions are multi-sentence paragraphs; justify them
+ * so long lines read as body text, not centered figure labels. */
+#attention figcaption {
+  text-align: justify;
+  text-align-last: left;}
+
+/* VIDEO GRIDS: .three-col is the standard 3 policy comparison row. */
+.video-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.video-grid.three-col { grid-template-columns: 1fr 1fr 1fr; }
+
+.video-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* allow grid items to shrink below min-content width */
+}
+
+/* Column label above each video ("Ours", "Long-History DP", etc.) */
+.col-header {
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-align: center;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+.col-header.ours {
+  font-weight: 600;
+}
+
+/* TASK HEADER: title + description beside the success rate chart.
+ * Video rows sit below at full width. */
+.task-header {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.task-header-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.task-chart {
+  flex-shrink: 0;
+  width: 240px;
+  margin-top: 1.8rem;
+}
+
+.task-chart .col-header {
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.task-chart img {
+  width: 100%;
+  display: block;
+}
+
+.task-chart figcaption {
+  font-size: 0.8rem;
+  text-align: center;
+  margin-top: 6px;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+/* Video rows: negative margins on both sides push the block wider than its parent */
+.task-videos-full {
+  margin-left:  calc(var(--video-bleed) / -2);
+  margin-right: calc(var(--video-bleed) / -2);
+}
+
+/* Tab bar and overlay snap back to column width by reversing the margin bleed */
+.task-videos-full .tab-bar,
+.task-videos-full .overlay-details {
+  margin-left:  calc(var(--video-bleed) / 2);
+  margin-right: calc(var(--video-bleed) / 2);
+}
+
+@media (max-width: 640px) {
+  .task-header { flex-direction: column; }
+  .task-chart  { width: 100%; }
+  .task-videos-full { margin-left: 0; margin-right: 0; }
+  .task-videos-full .tab-bar,
+  .task-videos-full .overlay-details { margin-left: 0; margin-right: 0; }
+}
+
+/* SUBSECTIONS (Pushing, Casting, Flinging, Cup, etc.) */
+.subsection {
+  width: 100%;
+  padding-top: 36px;
+}
+
+.subsection + .subsection {
+  position: relative;
+  margin-top: 24px;
+  padding-top: 48px;
+}
+
+.subsection + .subsection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--border);
+}
+
+.subsection h3 {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  margin-bottom: 0.5rem;
+}
+
+.subsection-intro {
+  color: var(--text-soft);
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  line-height: 1.65;
+  text-align: justify;
+  text-align-last: left;}
+
+/* TAB BAR (editorial underline).
+ * Horizontal row with a hairline separator. The active tab shows a 2px
+ * accent bar that slides in via scaleX. No pill chrome, no fill. */
+.tab-bar {
+  display: flex;
+  gap: 2px;
+  padding: 0;
+  margin-bottom: 1.25rem;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  max-width: 100%;
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  flex-shrink: 0;
+  position: relative;
+  padding: 11px 18px 13px;
+  margin-bottom: -1px; /* align bar ::after with bar's border */
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: -0.008em;
+  color: var(--text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.22s var(--ease-out);
+}
+
+/* Sliding 2px accent bar: scales in from center when active */
+.tab-btn::after {
+  content: '';
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 0;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px 2px 0 0;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.3s var(--ease-out);
+}
+
+.tab-btn:hover {
+  color: var(--text);
+}
+
+.tab-btn.active {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.tab-btn.active::after {
+  transform: scaleX(1);
+}
+
+.tab-panel         { display: none; }
+.tab-panel.active  { display: block; width: 100%; max-width: 100%; }
+
+/* INITIAL POSITION ACCORDION (Cup task).
+ * Pure <details>/<summary>, no JS. */
+.overlay-details {
+  margin-top: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.overlay-details summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  -webkit-appearance: none;
+  appearance: none;
+  list-style: none;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  text-transform: none;
+  color: var(--accent);
+  cursor: pointer;
+  user-select: none;
+  padding: 2px 0;
+  border: none;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.18s var(--ease-out), gap 0.18s var(--ease-out);
+}
+
+.overlay-details summary::-webkit-details-marker { display: none; }
+.overlay-details summary::marker { display: none; }
+
+.overlay-details summary:hover {
+  border-bottom-color: var(--accent);
+  gap: 9px;
+}
+
+.overlay-details summary::after {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23b5552a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  flex-shrink: 0;
+  transition: transform 0.2s var(--ease-out);
+}
+
+.overlay-details[open] summary::after { transform: rotate(180deg); }
+
+.overlay-details figure { margin-top: 0.85rem; width: 100%; }
+.overlay-details figure img { width: 100%; display: block; }
+
+.overlay-single {
+  margin-top: 0.85rem;
+  max-width: 280px;
+}
+
+/* IN THE WILD: own chapter, banner-style grid video.
+ * Compact vertical padding + compact labels so section-label + h2 + lede
+ * + labels + full-bleed grid fit in a typical laptop viewport. */
+#in-the-wild {
+  padding-top: 48px !important;
+  padding-bottom: 48px !important;
+}
+
+#in-the-wild .full-bleed {
+  margin-top: 0;
+}
+
+/* Two equal-width titles above the full-bleed grid; each mirrors its half
+ * of the 8-column grid (left 4 cols = no-pert, right 4 cols = pert).
+ * Eyebrow (accent, uppercase, monospace) matches .section-label; title
+ * underneath uses the site's Inter heading treatment. */
+.wild-labels {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  margin-top: 1.1rem;
+  margin-bottom: 0.6rem;
+  display: flex;
+}
+.wild-label {
+  flex: 1;
+  text-align: center;
+  padding: 0 1.5rem;
+}
+.wild-label-eyebrow {
+  display: block;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.3rem;
+}
+.wild-label-title {
+  display: block;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 1.3rem;
+  font-weight: 650;
+  color: var(--text);
+  letter-spacing: -0.018em;
+}
+
+/* FULL BLEED MEDIA
+ * Breaks an element out of the content column so it spans the full
+ * viewport width. Negative margins cancel the container's centering. */
+.full-bleed {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  display: block;
+  border-radius: 0;
+}
+
+/* TEAM SECTION */
+.team-grid {
+  display: flex;
+  gap: 28px 40px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.author-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 140px;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.28s var(--ease-out);
+}
+
+a.author-card:hover {
+  transform: translateY(-4px);
+  text-decoration: none;
+}
+
+.author-photo {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 0.28s var(--ease-out);
+}
+
+a.author-card:hover .author-photo {
+  border-color: var(--accent);
+}
+
+.author-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.author-photo svg {
+  width: 44px;
+  height: 44px;
+  color: var(--text-faint);
+}
+
+.author-name {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  line-height: 1.3;
+  margin: 0;
+}
+
+.corresponding {
+  font-size: 0.75em;
+  color: var(--accent);
+  vertical-align: super;
+  line-height: 0;
+  cursor: help;
+}
+
+.author-affil {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* FOOTER */
+#footer {
+  background: var(--bg-alt);
+  border-top: 1px solid var(--hairline);
+  padding: 72px var(--pad-x) 56px;
+  margin-top: 48px;
+}
+
+#footer .container {
+  max-width: var(--max-w);
+}
+
+.footer-section-label {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-section-label::before {
+  content: '';
+  width: 14px;
+  height: 1.5px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+.citation-block {
+  font-size: 0.95rem;
+  color: var(--text-soft);
+  margin-bottom: 1.75rem;
+  line-height: 1.65;
+}
+
+.bibtex-wrapper {
+  position: relative;
+  margin-bottom: 3rem;
+}
+
+.bibtex-wrapper pre {
+  background: #111111;
+  color: #d4d4d4;
+  padding: 1.35rem 1.6rem;
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  font-size: 0.82rem;
+  line-height: 1.7;
+  overflow-x: auto;
+}
+
+/* Reset the inline code pill styling when <code> sits inside a <pre>
+ * block (e.g. the BibTeX box) — the pre supplies its own colors, font,
+ * and padding, so the inline rule would otherwise override the dark bg. */
+.bibtex-wrapper pre code {
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  border-radius: 0;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 6px;
+  color: #d4d4d4;
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  letter-spacing: -0.005em;
+  cursor: pointer;
+  transition: background 0.18s var(--ease-out),
+              border-color 0.18s var(--ease-out);
+}
+
+.copy-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.26);
+}
+
+.copy-btn.copied {
+  background: rgba(80, 200, 120, 0.2);
+  border-color: rgba(80, 200, 120, 0.4);
+  color: #a7f3d0;
+}
+
+.footer-ack {
+  font-size: 0.9rem;
+  color: var(--text-soft);
+  margin-bottom: 0.75rem;
+  line-height: 1.6;
+}
+
+.footer-copyright {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.footer-copyright a {
+  color: var(--text-soft);
+}
+
+/* SECTION SLIDE IN
+ * JS adds .section-reveal to each top level section, then flips .is-visible
+ * when the section enters the viewport. The whole section slides up as one
+ * block so the next chapter feels like it glides in from below. */
+.section-reveal {
+  opacity: 0;
+  transform: translateY(90px);
+  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.section-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-reveal,
+  .section-reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* MAJOR SECTIONS
+ * Extra vertical padding on top level sections gives the eye breathing
+ * room between chapters. */
+/* Uniform vertical rhythm across major sections: 52px top/bottom means
+ * ~104px of breathing room between any two sections. */
+#cross-trial,
+#in-trial,
+#in-the-wild,
+#method,
+#attention,
+#benchmark,
+#faq,
+#team,
+#acknowledgments {
+  padding-top: 52px;
+  padding-bottom: 52px;
+}
+
+/* In-the-Wild is a full-bleed banner and needs to stay compact, but its
+ * bottom gap to the Method section below deserves the full rhythm. */
+#in-the-wild {
+  padding-top: 32px !important;
+  padding-bottom: 48px !important;
+}
+
+@media (max-width: 768px) {
+  #cross-trial,
+  #in-trial,
+  #in-the-wild,
+  #method,
+  #attention,
+  #benchmark,
+  #faq,
+  #team,
+  #acknowledgments {
+    padding-top: 36px;
+    padding-bottom: 36px;
+  }
+  #in-the-wild {
+    padding-top: 20px !important;
+    padding-bottom: 32px !important;
+  }
+}
+
+/* Acknowledgments: prose spans the full section column so the block
+ * balances with the Team grid above it. Smaller type since the reading
+ * measure is wider than the site's standard 760px lede column. */
+#acknowledgments .body-text {
+  max-width: none;
+  font-size: 0.95rem;
+  line-height: 1.68;
+  margin-bottom: 1rem;
+}
+#acknowledgments .body-text:last-child { margin-bottom: 0; }
+
+/* FOCUS STATES (keyboard accessibility, branded) */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.btn-link:focus-visible,
+.tab-btn:focus-visible,
+.copy-btn:focus-visible {
+  outline-offset: 2px;
+}
+
+.toc-link:focus-visible {
+  outline-offset: 0;
+  outline-width: 1.5px;
+}
+
+
+/* METHOD
+ * Zigzag layout: figure on one side, caption on the other, alternating
+ * per row, vertically centered. */
+.method-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 56px;
+  align-items: start;
+  margin-top: 90px;
+}
+
+.method-row:first-of-type { margin-top: 1rem; }
+
+/* Flipped row: image on right, caption on left (reverse order) */
+.method-row-flip .method-img {
+  grid-column: 2;
+  grid-row: 1;
+  padding-top: 2rem;
+}
+.method-row-flip .method-caption {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.method-img {
+  margin: 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.method-img img {
+  width: 100%;
+  height: auto;
+  display: block;
+  cursor: zoom-in;
+  transition: opacity 140ms var(--ease-out);
+}
+
+.method-img img:hover { opacity: 0.92; }
+
+/* Click-to-zoom lightbox: dim backdrop, image scales up to the viewport
+ * measure minus a 3vw inset on each side. Click backdrop or press Esc
+ * to close. The backdrop's cursor signals zoom-out. */
+.img-lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 16, 12, 0);
+  -webkit-backdrop-filter: blur(0);
+  backdrop-filter: blur(0);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3vw;
+  cursor: zoom-out;
+  transition: background 280ms var(--ease-out),
+              backdrop-filter 280ms var(--ease-out),
+              -webkit-backdrop-filter 280ms var(--ease-out);
+  will-change: background, backdrop-filter;
+}
+
+.img-lightbox.is-open {
+  background: rgba(20, 16, 12, 0.88);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.img-lightbox img {
+  /* Force the image to scale up to the viewport measure even when the
+   * SVG has a small intrinsic width/height attribute baked in. Both
+   * width and max-height are set so the aspect ratio is preserved
+   * against whichever viewport dimension is the tighter constraint. */
+  width: min(94vw, 1800px);
+  height: auto;
+  max-height: 94vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
+  background: var(--bg);
+  opacity: 0;
+  transform: scale(0.88);
+  transform-origin: center;
+  transition: opacity 320ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+  cursor: zoom-out;
+}
+
+.img-lightbox.is-open img {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.img-lightbox.is-closing {
+  background: rgba(20, 16, 12, 0);
+  -webkit-backdrop-filter: blur(0);
+  backdrop-filter: blur(0);
+}
+
+.img-lightbox.is-closing img {
+  opacity: 0;
+  transform: scale(0.94);
+}
+
+.img-lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  color: #faf7f0;
+  cursor: pointer;
+  font-size: 1.2rem;
+  line-height: 1;
+  transition: background 140ms var(--ease-out);
+}
+
+.img-lightbox-close:hover { background: rgba(255, 255, 255, 0.2); }
+
+.method-caption {
+  min-width: 0;
+}
+
+.method-caption h3 {
+  font-size: 1.2rem;
+  font-weight: 650;
+  letter-spacing: -0.014em;
+  color: var(--text);
+  margin: 0 0 0.6rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Numbered procedure list under the Gating Mechanism caption. */
+.method-caption .method-steps {
+  list-style: none;
+  counter-reset: step;
+  margin: 0.7rem 0 0;
+  padding: 0;
+}
+.method-caption .method-steps li {
+  counter-increment: step;
+  position: relative;
+  padding-left: 1.8rem;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--text-soft);
+  margin-bottom: 0.3rem;
+}
+.method-caption .method-steps li:last-child { margin-bottom: 0; }
+.method-caption .method-steps li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--accent);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.92rem;
+  font-weight: 550;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.55;
+  width: 1.4rem;
+}
+
+.method-caption p {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.68;
+  color: var(--text-soft);
+  text-align: justify;
+  text-align-last: left;}
+
+@media (max-width: 768px) {
+  .method-row,
+  .method-row-flip {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin-top: 40px;
+  }
+  .method-img { min-height: auto; }
+  /* On mobile, caption always below image regardless of flip */
+  .method-row-flip .method-img { grid-column: 1; grid-row: 1; }
+  .method-row-flip .method-caption { grid-column: 1; grid-row: 2; }
+  .method-row .method-img { grid-row: 1; }
+  .method-row .method-caption { grid-row: 2; }
+}
+
+/* BENCHMARK: two stacked horizontal blocks (RoboMimic, Mikasa) */
+.benchmark-block {
+  margin-top: 40px;
+}
+
+.benchmark-block:first-of-type {
+  margin-top: 1.25rem;
+}
+
+.benchmark-block h3 {
+  color: var(--text);
+  margin: 0 0 1rem;
+}
+
+.benchmark-chart {
+  margin: 0 0 1.25rem;
+}
+
+.benchmark-chart img {
+  width: 100%;
+  display: block;
+}
+
+.benchmark-caption {
+  font-size: 0.92rem;
+  line-height: 1.68;
+  color: var(--text-soft);
+  text-align: justify;
+  text-align-last: left;  margin: 0;
+  max-width: none;
+}
+
+/* FAQ: flat accordion with a chevron indicator */
+.faq-list {
+  margin-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--border);
+}
+
+.faq-item summary {
+  position: relative;
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+  padding: 22px 44px 22px 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 550;
+  letter-spacing: -0.012em;
+  color: var(--text);
+  transition: color 0.2s var(--ease-out);
+}
+
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::marker { display: none; }
+
+.faq-item summary:hover {
+  color: var(--accent);
+}
+
+/* Chevron indicator that rotates when item is open */
+.faq-item summary::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  width: 11px;
+  height: 11px;
+  border-right: 1.5px solid var(--text-muted);
+  border-bottom: 1.5px solid var(--text-muted);
+  transform: translateY(-70%) rotate(45deg);
+  transition: transform 0.28s var(--ease-out),
+              border-color 0.2s var(--ease-out);
+}
+
+.faq-item summary:hover::after {
+  border-color: var(--accent);
+}
+
+.faq-item[open] summary::after {
+  transform: translateY(-30%) rotate(-135deg);
+  border-color: var(--accent);
+}
+
+.faq-item[open] summary {
+  color: var(--accent);
+}
+
+.faq-answer {
+  padding: 0 44px 24px 0;
+  color: var(--text-soft);
+  font-size: 0.95rem;
+  line-height: 1.68;
+  text-align: justify;
+  text-align-last: left;  animation: faq-fade 0.32s var(--ease-out);
+}
+
+.faq-answer p { margin-bottom: 0.75rem; }
+.faq-answer p:last-child { margin-bottom: 0; }
+
+.faq-video {
+  margin: 0;
+  flex: 1 1 0;
+  min-width: 0;
+}
+.faq-video video {
+  width: 100%;
+  border-radius: 6px;
+  display: block;
+}
+.faq-video figcaption {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+/* Two episode clips side by side, stacking on narrow viewports. */
+.faq-video-pair {
+  display: flex;
+  gap: 16px;
+  margin: 1rem 0 0.5rem;
+}
+@media (max-width: 640px) {
+  .faq-video-pair { flex-direction: column; }
+}
+
+.faq-video-note {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 0.4rem;
+  text-align: justify;
+  text-align-last: left;}
+
+@keyframes faq-fade {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* TASK CHART: transparent frame so charts blend with page bg */
+.task-chart {
+  padding: 10px 14px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: transparent;
+  transition: border-color 0.22s var(--ease-out);
+}
+
+.task-chart:hover {
+  border-color: var(--accent-line);
+}
+
+/* RESPONSIVE: stack grids to one column on mobile */
+@media (max-width: 640px) {
+  .video-grid.three-col { grid-template-columns: 1fr; }
+
+  .link-buttons { flex-direction: column; align-items: center; }
+
+  section { padding: 40px var(--pad-x); }
+
+  #hero-title { padding: var(--pad-x); }
+  #intro-split {
+    gap: 24px;
+    padding: 36px var(--pad-x);
+  }
+  #hero-video { border-radius: 8px; }
+
+  .team-grid { gap: 28px 24px; }
+  .author-card { width: 100px; }
+  .author-photo { width: 68px; height: 68px; }
+
+  #toc-nav { display: none; }
+}
+
+
+/* TEASER FIGURE (Fig. 1)
+ * Three columns: header, photo, short task description per regime.
+ * Extrudes beyond the body column and centers via
+ * margin-left:50% + translateX(-50%). Caption spans full width below at
+ * the narrower body measure. */
+.teaser-figure {
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 12px;
+  margin: 2rem auto;
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+}
+
+.tf-headers,
+.tf-photos,
+.tf-descriptions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.tf-descriptions { align-items: start; }
+
+.tf-headers { align-items: end; }
+
+.tf-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.tf-title-row {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  justify-content: center;
+}
+
+.tf-letter {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.tf-title {
+  font-size: 1rem;
+  font-weight: 650;
+  color: var(--text);
+  letter-spacing: -0.012em;
+}
+
+.tf-sub {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 3px;
+}
+
+.tf-photos { align-items: center; }
+
+/* Each SVG keeps its natural aspect ratio; widths vary, and each image
+ * is centered horizontally in its grid cell. align-items: end keeps the
+ * bottom edges of the three photos aligned so the description row below
+ * sits flush against them regardless of height.
+ *
+ * Markovian (1:1) and in-trial (~1.13:1) are narrow, so they appear
+ * visually small at the same height as the wider cross-trial (1.65:1).
+ * Making the first two slightly taller balances the row's visual
+ * weight. Background matches the page bg so any letterbox bands on the
+ * wider cross-trial are invisible. */
+.tf-photos img {
+  width: auto;
+  max-width: 100%;
+  height: 130px;
+  display: block;
+  margin: 0 auto;
+  border-radius: 4px;
+  background: var(--bg);
+}
+
+.tf-photos img:nth-child(1),
+.tf-photos img:nth-child(2) {
+  height: 150px;
+}
+
+.tf-descriptions p {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--text-soft);
+  margin: 0;
+  text-align: left;
+}
+
+.teaser-figure figcaption {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-top: 0.9rem;
+  text-align: justify;
+  text-align-last: left;}
+
+@media (max-width: 768px) {
+  .teaser-figure {
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+    transform: none;
+  }
+  .tf-headers,
+  .tf-photos,
+  .tf-descriptions {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .tf-photos img { height: 130px; }
+  .tf-descriptions p { font-size: 0.9rem; }
+}
+
+
+/* CUSTOM VIDEO CONTROLS
+ * Hover-reveal minimal overlay attached to every <video>. The progress
+ * hairline is always visible at the bottom edge; on hover the track grows,
+ * a scrubber knob appears, and a control pill fades in at the bottom-right
+ * with play/pause, playback speed, and fullscreen. Dragging scrubs. The
+ * autoplay IntersectionObserver in main.js respects data-user-paused and
+ * data-scrubbing so user intent is never overridden by visibility events.
+ */
+.vid-host {
+  position: relative;
+  line-height: 0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.vid-host > video { display: block; width: 100%; }
+
+/* Full-bleed banner: the wrapper takes over the full-bleed width so the
+ * video sits normally inside and the overlay's progress hairline tracks
+ * the actual video rect. Without this, .vid-host's overflow:hidden would
+ * clip the 100vw video down to the content column. */
+.vid-host.vid-host-bleed {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  border-radius: 0;
+}
+.vid-host.vid-host-bleed > video,
+.vid-host.vid-host-bleed > video.full-bleed {
+  width: 100%;
+  margin: 0;
+  border-radius: 0;
+}
+
+.vid-controls {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  border-radius: inherit;
+  overflow: hidden;
+}
+
+/* Soft gradient shade along the bottom of the video, revealed only when
+ * the cursor enters the video. Gives the hairline, knob, pill, and time
+ * pill enough contrast against bright footage without dimming the whole
+ * frame. */
+.vid-controls::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 110px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.75) 0%,
+    rgba(0, 0, 0, 0.55) 35%,
+    rgba(0, 0, 0, 0.28) 70%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  opacity: 0;
+  transition: opacity 180ms var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1));
+  pointer-events: none;
+}
+
+.vid-host:hover .vid-controls::before,
+.vid-controls.is-scrub::before {
+  opacity: 1;
+}
+
+.vid-track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 28px;
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: none;
+}
+
+.vid-range {
+  appearance: none;
+  -webkit-appearance: none;
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  opacity: 0;
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: none;
+}
+
+.vid-range::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 28px;
+  background: transparent;
+  border: 0;
+}
+
+.vid-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: 0;
+}
+
+.vid-range::-moz-range-track {
+  width: 100%;
+  height: 28px;
+  background: transparent;
+  border: 0;
+}
+
+.vid-range::-moz-range-thumb {
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: 0;
+}
+
+.vid-track::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 6px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.32);
+  opacity: 0;
+  transition: opacity 180ms var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+.vid-host:hover .vid-track::before,
+.vid-controls.is-scrub .vid-track::before {
+  opacity: 1;
+}
+
+.vid-fill {
+  position: absolute;
+  left: 0;
+  bottom: 6px;
+  width: 0;
+  height: 3px;
+  background: var(--accent);
+  opacity: 0;
+  transition: opacity 180ms var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)),
+              width 260ms linear;
+  pointer-events: none;
+}
+
+.vid-host:hover .vid-fill,
+.vid-controls.is-scrub .vid-fill {
+  opacity: 1;
+}
+
+/* During an active scrub, snap the fill/knob to the pointer position so
+ * the drag feels instant — no width/left interpolation. */
+.vid-controls.is-scrub .vid-fill {
+  transition: opacity 180ms var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+/* Knob is centered vertically on the hairline (bottom offset + transform
+ * pushes its visual center onto the progress line). The 6px lift leaves
+ * enough room underneath that overflow:hidden doesn't clip the lower half. */
+.vid-knob {
+  position: absolute;
+  left: 0;
+  bottom: 6.75px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9),
+              0 1px 3px rgba(0, 0, 0, 0.35);
+  transform: translate(-50%, 50%) scale(0);
+  transform-origin: center;
+  transition: transform 180ms var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)),
+              left 260ms linear;
+  pointer-events: none;
+}
+
+.vid-host:hover .vid-knob,
+.vid-controls.is-scrub .vid-knob {
+  transform: translate(-50%, 50%) scale(1);
+}
+
+.vid-controls.is-scrub .vid-knob {
+  transition: transform 180ms var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+.vid-pill {
+  position: absolute;
+  right: 10px;
+  bottom: 22px;
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  padding: 3px 4px;
+  background: rgba(26, 22, 18, 0.55);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  backdrop-filter: blur(10px) saturate(120%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  opacity: 0;
+  transform: translateY(3px);
+  transition: opacity 160ms var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)),
+              transform 160ms var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1));
+  pointer-events: none;
+  box-shadow: 0 2px 10px rgba(26, 22, 18, 0.18);
+}
+
+.vid-time {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  padding: 5px 10px;
+  background: rgba(26, 22, 18, 0.55);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  backdrop-filter: blur(10px) saturate(120%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  color: #faf7f0;
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  line-height: 1;
+  opacity: 0;
+  transform: translateY(3px);
+  transition: opacity 160ms var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)),
+              transform 160ms var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1));
+  pointer-events: none;
+  box-shadow: 0 2px 10px rgba(26, 22, 18, 0.18);
+  white-space: nowrap;
+}
+
+.vid-host:hover .vid-time,
+.vid-controls.is-scrub .vid-time {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.vid-time-sep { opacity: 0.45; }
+.vid-time-tot { opacity: 0.72; }
+
+.vid-host:hover .vid-pill,
+.vid-controls.is-scrub .vid-pill {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.vid-btn {
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #faf7f0;
+  cursor: pointer;
+  border-radius: 999px;
+  transition: background 140ms var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)),
+              color 140ms var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+.vid-btn:hover { background: rgba(255, 255, 255, 0.16); }
+.vid-btn:active { background: rgba(255, 255, 255, 0.24); }
+.vid-btn:focus-visible { outline: 2px solid rgba(255, 255, 255, 0.7); outline-offset: 1px; }
+
+.vid-btn svg {
+  width: 12px;
+  height: 12px;
+  display: block;
+}
+
+.vid-btn.vid-btn-rate {
+  width: auto;
+  min-width: 30px;
+  padding: 0 7px;
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  line-height: 1;
+}
+
+/* Cursor feedback on the video surface itself. */
+.vid-host > video { cursor: pointer; }
+
+/* Fullscreen: video fills the screen on a black backdrop. */
+.vid-host:fullscreen,
+.vid-host:-webkit-full-screen {
+  background: #000;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.vid-host:fullscreen > video,
+.vid-host:-webkit-full-screen > video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Mobile: skinnier touch target, no hover (controls stay hidden unless
+ * tapped). The progress hairline remains visible. */
+@media (hover: none) {
+  .vid-track { height: 32px; }
+  .vid-pill {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+}
+
+/* Reduced motion: no knob scale transition, controls just appear. */
+@media (prefers-reduced-motion: reduce) {
+  .vid-track::before,
+  .vid-fill,
+  .vid-knob,
+  .vid-pill {
+    transition: none;
+  }
+}
+
+
+/* FOOTNOTE REFERENCES
+ * Inline superscripted numbers that link to papers / anchors, with a
+ * hover popover pulled from data-fn. */
+.fn-ref {
+  display: inline-block;
+  font-size: 0.7em;
+  font-weight: 600;
+  vertical-align: super;
+  line-height: 0;
+  margin-left: 2px;
+  padding: 0 3px;
+  color: var(--accent);
+  text-decoration: none;
+  cursor: help;
+  position: relative;
+  border-radius: 3px;
+  font-variant-numeric: tabular-nums;
+  transition: background 0.18s var(--ease-out), color 140ms var(--ease-out);
+}
+
+.fn-ref:hover,
+.fn-ref:focus-visible {
+  color: var(--text);
+  background: rgba(var(--accent-rgb), 0.12);
+  text-decoration: none;
+  outline: none;
+}
+
+.fn-ref::after {
+  content: attr(data-fn);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 6px);
+  transform: translateX(-50%) translateY(4px);
+  background: var(--text);
+  color: var(--bg);
+  font-size: 0.72rem;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0;
+  padding: 6px 10px;
+  border-radius: 5px;
+  max-width: min(360px, 70vw);
+  width: max-content;
+  white-space: normal;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 140ms var(--ease-out),
+              transform 140ms var(--ease-out);
+  box-shadow: var(--shadow-md);
+  z-index: 50;
+}
+
+.fn-ref:hover::after,
+.fn-ref:focus-visible::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+@media (max-width: 600px) {
+  .fn-ref::after { display: none; }
+}
+
+
+/* SOFT CTA: two paired invitation blocks before the footer. A muted
+ * question sits above an accented action link; the two blocks are
+ * separated by a hairline divider on wide viewports and stack with
+ * a short centered hairline on mobile. */
+.cta-block {
+  width: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 var(--pad-x) 72px;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: clamp(24px, 5vw, 56px);
+}
+
+.cta-item {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 4px;
+  text-align: center;
+}
+
+.cta-question {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin: 0;
+  letter-spacing: 0;
+  line-height: 1.4;
+}
+
+.cta-action {
+  font-size: 1rem;
+  margin: 0;
+  font-weight: 500;
+  letter-spacing: -0.008em;
+  line-height: 1.4;
+}
+
+.cta-action a {
+  color: var(--accent);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  border-bottom: 1px solid transparent;
+  transition: border-color 180ms var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)),
+              gap 180ms var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+.cta-action a:hover {
+  text-decoration: none;
+  gap: 10px;
+  border-bottom-color: currentColor;
+}
+
+.cta-arrow {
+  display: inline-block;
+  transition: transform 180ms var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+.cta-action a:hover .cta-arrow {
+  transform: translateX(2px);
+}
+
+.cta-divider {
+  width: 1px;
+  background: var(--border);
+  align-self: stretch;
+  margin: 10px 0;
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .cta-block {
+    flex-direction: column;
+    gap: 20px;
+    padding-bottom: 56px;
+  }
+  .cta-divider {
+    width: 48px;
+    height: 1px;
+    margin: 0 auto;
+  }
+}
+
+
+/* ALWAYS-ON PROGRESS HINT for every video except the full-bleed banner.
+ * Viewers need to see where they are in a clip without having to hover,
+ * so the hairline, fill, and time readout stay visible. The knob + pill
+ * still only reveal on hover so the rest of the UI stays minimal. */
+.vid-track::before,
+.vid-fill {
+  opacity: 1;
+}
+
+.vid-time {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Muted corner shade keeps the always-on progress line legible over
+ * bright frames without the full hover gradient. Kept light and low so
+ * the shade stays subtle even on larger (4:3) video tiles. */
+.vid-controls::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 20px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.22) 0%,
+    rgba(0, 0, 0, 0.06) 65%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  pointer-events: none;
+  z-index: -1;
+  transition: opacity 180ms var(--ease-out);
+}
+
+.vid-host:hover .vid-controls::after {
+  opacity: 0;
+}
+
+/* Full-bleed banner (#in-the-wild hero video) keeps its original
+ * hover-only behavior so the cinematic framing isn't cluttered. */
+.vid-host-bleed .vid-track::before,
+.vid-host-bleed .vid-fill,
+.vid-host-bleed .vid-time {
+  opacity: 0;
+}
+
+.vid-host-bleed .vid-time { transform: translateY(-3px); }
+
+.vid-host-bleed:hover .vid-track::before,
+.vid-host-bleed:hover .vid-fill,
+.vid-host-bleed:hover .vid-time,
+.vid-host-bleed .vid-controls.is-scrub .vid-track::before,
+.vid-host-bleed .vid-controls.is-scrub .vid-fill,
+.vid-host-bleed .vid-controls.is-scrub .vid-time {
+  opacity: 1;
+}
+
+.vid-host-bleed:hover .vid-time,
+.vid-host-bleed .vid-controls.is-scrub .vid-time {
+  transform: translateY(0);
+}
+
+.vid-host-bleed .vid-controls::after { display: none; }
