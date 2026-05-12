@@ -24,4 +24,39 @@
       showToast(label + ' releasing soon — stay tuned!');
     });
   });
+
+  function copyText(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text);
+    }
+    return new Promise(function (resolve, reject) {
+      try {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'absolute';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        resolve();
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
+
+  document.querySelectorAll('[data-copy-target]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var sel = btn.getAttribute('data-copy-target');
+      var target = sel ? document.querySelector(sel) : null;
+      if (!target) return;
+      copyText(target.innerText.trim()).then(function () {
+        showToast('BibTeX copied to clipboard');
+      }).catch(function () {
+        showToast('Could not copy — please copy manually');
+      });
+    });
+  });
 })();
