@@ -4,161 +4,280 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BEACON: Cross-Domain Co-Training of Generative Robot Policies via Best-Effort Adaptation</title>
+  <meta name="description" content="BEACON jointly learns a diffusion-based visuomotor policy and per-sample source weights, guided by the Best-Effort Adaptation bound, to transfer robot policies from abundant source demonstrations to a new domain with only a handful of target demonstrations.">
+
+  <meta property="og:title" content="BEACON: Cross-Domain Co-Training of Generative Robot Policies via Best-Effort Adaptation">
+  <meta property="og:description" content="Learn which source demonstrations should supervise the target policy, and by how much. Sim-to-sim, sim-to-real and multi-source results on a Franka Panda.">
+  <meta property="og:image" content="assets/video/beacon-promo-poster.jpg">
+  <meta property="og:type" content="website">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 
-  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<main>
+<a class="skip-link" href="#method">Skip to content</a>
 
-  <header id="hero">
-    <h1 class="paper-title">
-      <span class="acronym">BEACON</span>:
-      Cross-Domain Co-Training of Generative Robot Policies
-      via Best-Effort Adaptation
+<nav class="topbar" aria-label="Page">
+  <a class="topbar-brand" href="#top">BEACON</a>
+  <div class="topbar-links">
+    <a href="#method">How it works</a>
+    <a href="#rollouts">Rollouts</a>
+    <a href="#citation">Cite</a>
+  </div>
+  <div class="topbar-actions">
+    <a class="btn btn-small" href="https://arxiv.org/abs/2605.08571" target="_blank" rel="noopener">Paper</a>
+    <a class="btn btn-small btn-primary" href="https://github.com/zatpds/BEACON" target="_blank" rel="noopener">Code</a>
+  </div>
+</nav>
+
+<main id="top">
+
+  <!-- ───────────────────────── HERO ───────────────────────── -->
+  <header class="hero">
+    <h1 class="hero-title">
+      <span class="hero-acronym">BEACON</span>
+      Cross-Domain Co-Training of Generative Robot Policies via Best-Effort Adaptation
     </h1>
 
-    <p class="authors">
-      <a href="#" class="author">Antong Zhang</a><sup class="aff">1</sup>,
-      <a href="#" class="author">Han Qi</a><sup class="aff">2</sup>,
-      <a href="#" class="author">Heng Yang</a><sup class="aff">2</sup>
-    </p>
-
-    <p class="affiliations">
-      <sup>1</sup>Brown University &nbsp; &middot; &nbsp;
-      <sup>2</sup>Harvard University
-    </p>
-
-    <div class="link-buttons">
-      <a href="https://arxiv.org/abs/2605.08571" target="_blank" rel="noopener" class="btn-link">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-          <polyline points="14 2 14 8 20 8"/>
-          <line x1="16" y1="13" x2="8" y2="13"/>
-          <line x1="16" y1="17" x2="8" y2="17"/>
-        </svg>
-        Paper
-      </a>
-
-      <button type="button" class="btn-link" data-coming-soon="Code">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482
-                   0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462
-                   -1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529
-                   2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943
-                   0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025
-                   A9.578 9.578 0 0 1 12 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025
-                   2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842
-                   -2.339 4.687-4.566 4.933.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741
-                   0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
-        </svg>
-        Code
-      </button>
-
-      <button type="button" class="btn-link" data-coming-soon="Dataset">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <ellipse cx="12" cy="5" rx="9" ry="3"/>
-          <path d="M3 5v6c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/>
-          <path d="M3 11v6c0 1.66 4.03 3 9 3s9-1.34 9-3v-6"/>
-        </svg>
-        Dataset
-      </button>
+    <div class="hero-meta">
+      <p class="authors">
+        <span class="author">Antong Zhang<sup>1</sup></span>
+        <span class="author">Han Qi<sup>2</sup></span>
+        <span class="author">Heng Yang<sup>2</sup></span>
+      </p>
+      <p class="affiliations">
+        <span><sup>1</sup>Brown University</span>
+        <span><sup>2</sup>Harvard University</span>
+      </p>
     </div>
-  </header>
 
+    <div class="hero-actions">
+      <a class="btn" href="https://arxiv.org/abs/2605.08571" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5M9 13h7M9 17h7"/></svg>
+        arXiv
+      </a>
+      <a class="btn" href="https://github.com/zatpds/BEACON" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg>
+        Code
+      </a>
+      <a class="btn" href="#citation">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8h10M7 12h10M7 16h6"/><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+        BibTeX
+      </a>
+    </div>
 
-  <section id="abstract">
-    <h2>Abstract</h2>
-    <p>
-      We introduce <strong>BEACON</strong>&mdash;Best-Effort Adaptation for Cross-Domain
-      Co-Training&mdash;a theory-driven framework for training generative robot policies
-      with abundant source demonstrations and limited target demonstrations. BEACON casts
-      cross-domain co-training as a discrepancy-aware importance-reweighting problem,
-      jointly learning a diffusion-based visuomotor policy and per-sample source weights
-      that minimize an objective informed by target-domain generalization guarantees.
-      To make best-effort adaptation practical for high-dimensional sequence policies,
-      we develop scalable instance-level discrepancy estimators, stochastic alternating
-      updates for policy and weights, and a multi-source extension that balances
-      heterogeneous source domains. Across sim-to-sim, sim-to-real, and multi-source
-      manipulation settings, BEACON improves robustness and data efficiency over
-      target-only, fixed-ratio co-training, and feature-alignment baselines. Importantly,
-      even without an explicit alignment objective, BEACON achieves feature alignment as
-      an implicit result of discrepancy-aware cross-domain co-training.
-    </p>
-  </section>
-
-
-  <section id="overview">
-    <figure class="figure">
-      <img src="beacon/figures/figure1.png" alt="BEACON overview: cross-domain policy co-training via best-effort adaptation.">
-      <figcaption>
-        <strong>BEACON.</strong> Given a large amount of (multi-)source demonstrations and
-        a small amount of target demonstrations, BEACON jointly learns a diffusion-based
-        visuomotor policy and a set of per-sample weights that directly minimizes a
-        theoretically grounded discrepancy-based generalization bound on the target domain.
-      </figcaption>
-    </figure>
-  </section>
-
-
-  <section id="supplementary">
-    <h2>Supplementary Video</h2>
-    <figure class="video-figure">
-      <video controls preload="metadata" playsinline>
-        <source src="beacon/supplementary_material.mp4" type="video/mp4">
+    <figure class="hero-video" id="video">
+      <video id="promo" autoplay muted loop controls playsinline preload="auto" poster="assets/video/beacon-promo-poster.jpg">
+        <source src="assets/video/beacon-promo.mp4" type="video/mp4">
         Your browser does not support the video tag.
       </video>
     </figure>
+
+    <p class="hero-lede">
+      BEACON co-trains a diffusion policy on hundreds of simulated demonstrations and a few
+      dozen from the target domain, and learns how much each source demonstration should count.
+    </p>
+  </header>
+
+  <!-- ───────────────────────── METHOD / SCROLLYTELLING ───────────────────────── -->
+  <section class="method" id="method" aria-labelledby="method-title">
+    <div class="method-head">
+      <h2 id="method-title">How it works</h2>
+      <p>Scroll: the Franka runs the four tasks while the method unfolds. Illustrative animation, not a rollout.</p>
+    </div>
+
+    <div class="method-body">
+      <div class="method-steps">
+
+        <article class="step" data-task="stack" data-title="Block stacking">
+          <h3>Two domains, one policy</h3>
+          <p>
+            500 simulated source demonstrations per task; 20–40 target demonstrations in a
+            shifted simulator or on the real robot. Fixed-ratio co-training counts every source
+            trajectory the same, whether or not it resembles the target.
+          </p>
+        </article>
+
+        <article class="step" data-task="mug" data-title="Mug cleanup">
+          <h3>Score each source sample</h3>
+          <p>
+            Every source window gets a discrepancy score <span class="math">d<sub>i</sub></span>:
+            the distance from its encoder embedding to its <span class="math">k</span> nearest
+            target embeddings. Near 1 means in-distribution; large means mismatched.
+          </p>
+        </article>
+
+        <article class="step" data-task="thread" data-title="Threading">
+          <h3>Learn weights and policy together</h3>
+          <p>
+            A surrogate of the Best-Effort Adaptation bound: <span class="math">q</span>-weighted
+            imitation loss, a discrepancy penalty, and a regularizer. Alternating updates of the
+            source weights and the diffusion policy; target samples always stay in.
+          </p>
+        </article>
+
+        <article class="step" data-task="ball" data-title="Ball rollover">
+          <h3>Several sources</h3>
+          <p>
+            MS-BEACON adds a domain-level weight on top of the per-sample weights, so simulators
+            closer to the target get more say.
+          </p>
+        </article>
+
+        <article class="step step-last" data-task="stack" data-title="Block stacking">
+          <h3>What BEACON achieves</h3>
+          <p>
+            Stronger sim-to-sim, sim-to-real and multi-source transfer than target-only,
+            fixed-ratio and feature-alignment baselines, and it holds up on out-of-distribution
+            initial states.
+          </p>
+        </article>
+
+      </div>
+
+      <div class="method-stage">
+        <div class="stage-sticky">
+          <canvas id="robot-canvas" aria-label="Animated Franka Panda arm performing the four manipulation tasks" role="img"></canvas>
+          <div class="stage-hud" aria-hidden="true">
+            <span class="hud-task" id="hud-task">Block stacking</span>
+            <span class="hud-progress"><span id="hud-bar"></span></span>
+          </div>
+          <noscript><img src="assets/video/beacon-promo-poster.jpg" alt="BEACON title card"></noscript>
+        </div>
+      </div>
+    </div>
   </section>
 
+  <!-- ───────────────────────── ABSTRACT ───────────────────────── -->
+  <section class="abstract" id="abstract" aria-labelledby="abstract-title">
+    <h2 id="abstract-title">Abstract</h2>
+    <p>
+      We introduce <strong>BEACON</strong>, Best-Effort Adaptation for Cross-Domain Co-Training, a
+      theory-guided framework for training generative robot policies with abundant source
+      demonstrations and limited target demonstrations. BEACON casts cross-domain co-training
+      as a discrepancy-aware importance-reweighting problem, jointly learning a diffusion-based
+      visuomotor policy and per-sample source weights through an objective inspired by the
+      Best-Effort Adaptation (BEA) bound. To make this approach practical for high-dimensional
+      sequence policies, we develop scalable instance-level discrepancy proxies, stochastic
+      alternating updates for policy and weights, and a multi-source extension that balances
+      heterogeneous source domains. Across sim-to-sim, sim-to-real, and multi-source manipulation
+      settings, BEACON improves robustness and data efficiency over target-only, fixed-ratio
+      co-training, and feature-alignment baselines. Without an explicit alignment objective,
+      BEACON also brings source and target representations closer together as an implicit
+      result of discrepancy-aware co-training.
+    </p>
+  </section>
 
-  <section id="citation">
-    <h2>Citation</h2>
+  <!-- ───────────────────────── ROLLOUTS ───────────────────────── -->
+  <section class="rollouts" id="rollouts" aria-labelledby="rollouts-title">
+    <div class="section-head">
+      <h2 id="rollouts-title">BEACON rollouts</h2>
+      <p>
+        Real-robot trials are recorded by the robot’s camera. OOD trials start from object
+        positions outside the range of the target demonstrations.
+      </p>
+    </div>
+
+    <!-- Real robot -->
+    <div class="gallery" id="gallery-real">
+      <div class="gallery-head">
+        <h3>Real robot</h3>
+        <div class="segmented" role="tablist" aria-label="Real-robot task">
+          <button role="tab" aria-selected="true" data-group="mug">Mug cleanup</button>
+          <button role="tab" aria-selected="false" data-group="stack">Block stacking</button>
+          <button role="tab" aria-selected="false" data-group="ball">Ball rollover</button>
+        </div>
+      </div>
+
+      <div class="gallery-group is-active" data-group="mug" role="tabpanel">
+        <div class="tiles tiles-6">
+          <figure class="tile"><video muted loop playsinline preload="none" poster="assets/video/real/mug/beacon.jpg" data-src="assets/video/real/mug/beacon.mp4"></video><figcaption>Continuous rollouts</figcaption></figure>
+          <figure class="tile"><video muted loop playsinline preload="none" poster="assets/video/real/mug/trial-1.jpg" data-src="assets/video/real/mug/trial-1.mp4"></video><figcaption>Trial 1</figcaption></figure>
+          <figure class="tile"><video muted loop playsinline preload="none" poster="assets/video/real/mug/trial-2.jpg" data-src="assets/video/real/mug/trial-2.mp4"></video><figcaption>Trial 2</figcaption></figure>
+          <figure class="tile"><video muted loop playsinline preload="none" poster="assets/video/real/mug/trial-3.jpg" data-src="assets/video/real/mug/trial-3.mp4"></video><figcaption>Trial 3</figcaption></figure>
+          <figure class="tile tile-ood"><video muted loop playsinline preload="none" poster="assets/video/real/mug/ood-1.jpg" data-src="assets/video/real/mug/ood-1.mp4"></video><figcaption>OOD trial 1</figcaption></figure>
+          <figure class="tile tile-ood"><video muted loop playsinline preload="none" poster="assets/video/real/mug/ood-2.jpg" data-src="assets/video/real/mug/ood-2.mp4"></video><figcaption>OOD trial 2</figcaption></figure>
+        </div>
+      </div>
+
+      <div class="gallery-group" data-group="stack" role="tabpanel" hidden>
+        <div class="tiles tiles-6">
+          <figure class="tile"><video muted loop playsinline preload="none" poster="assets/video/real/stack/beacon.jpg" data-src="assets/video/real/stack/beacon.mp4"></video><figcaption>Continuous rollouts</figcaption></figure>
+          <figure class="tile"><video muted loop playsinline preload="none" poster="assets/video/real/stack/trial-1.jpg" data-src="assets/video/real/stack/trial-1.mp4"></video><figcaption>Trial 1</figcaption></figure>
+          <figure class="tile"><video muted loop playsinline preload="none" poster="assets/video/real/stack/trial-2.jpg" data-src="assets/video/real/stack/trial-2.mp4"></video><figcaption>Trial 2</figcaption></figure>
+          <figure class="tile"><video muted loop playsinline preload="none" poster="assets/video/real/stack/trial-3.jpg" data-src="assets/video/real/stack/trial-3.mp4"></video><figcaption>Trial 3</figcaption></figure>
+          <figure class="tile tile-ood"><video muted loop playsinline preload="none" poster="assets/video/real/stack/ood-1.jpg" data-src="assets/video/real/stack/ood-1.mp4"></video><figcaption>OOD trial 1</figcaption></figure>
+          <figure class="tile tile-ood"><video muted loop playsinline preload="none" poster="assets/video/real/stack/ood-2.jpg" data-src="assets/video/real/stack/ood-2.mp4"></video><figcaption>OOD trial 2</figcaption></figure>
+        </div>
+      </div>
+
+      <div class="gallery-group" data-group="ball" role="tabpanel" hidden>
+        <div class="tiles tiles-3">
+          <figure class="tile"><video muted loop playsinline preload="none" poster="assets/video/real/ball/beacon.jpg" data-src="assets/video/real/ball/beacon.mp4"></video><figcaption>Continuous rollout</figcaption></figure>
+          <figure class="tile"><video muted loop playsinline preload="none" poster="assets/video/real/ball/trial-1.jpg" data-src="assets/video/real/ball/trial-1.mp4"></video><figcaption>Trial 1</figcaption></figure>
+          <figure class="tile"><video muted loop playsinline preload="none" poster="assets/video/real/ball/trial-2.jpg" data-src="assets/video/real/ball/trial-2.mp4"></video><figcaption>Trial 2</figcaption></figure>
+        </div>
+      </div>
+    </div>
+
+    <!-- Simulation -->
+    <div class="gallery" id="gallery-sim">
+      <div class="gallery-head">
+        <h3>Simulation</h3>
+        <p class="gallery-note">Target-T: texture gap. Target-T+V: texture and viewpoint gap.</p>
+      </div>
+      <div class="tiles tiles-sim">
+        <figure class="tile"><video muted loop playsinline preload="none" poster="assets/video/sim/stack-t.jpg" data-src="assets/video/sim/stack-t.mp4"></video><figcaption>Block stacking <span>Target-T</span></figcaption></figure>
+        <figure class="tile"><video muted loop playsinline preload="none" poster="assets/video/sim/stack-tv.jpg" data-src="assets/video/sim/stack-tv.mp4"></video><figcaption>Block stacking <span>Target-T+V</span></figcaption></figure>
+        <figure class="tile"><video muted loop playsinline preload="none" poster="assets/video/sim/mug-t.jpg" data-src="assets/video/sim/mug-t.mp4"></video><figcaption>Mug cleanup <span>Target-T</span></figcaption></figure>
+        <figure class="tile"><video muted loop playsinline preload="none" poster="assets/video/sim/mug-tv.jpg" data-src="assets/video/sim/mug-tv.mp4"></video><figcaption>Mug cleanup <span>Target-T+V</span></figcaption></figure>
+        <figure class="tile"><video muted loop playsinline preload="none" poster="assets/video/sim/thread-t.jpg" data-src="assets/video/sim/thread-t.mp4"></video><figcaption>Threading <span>Target-T</span></figcaption></figure>
+        <figure class="tile"><video muted loop playsinline preload="none" poster="assets/video/sim/thread-tv.jpg" data-src="assets/video/sim/thread-tv.mp4"></video><figcaption>Threading <span>Target-T+V</span></figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────────────────── CITATION ───────────────────────── -->
+  <section class="citation" id="citation" aria-labelledby="citation-title">
+    <h2 id="citation-title">Citation</h2>
+    <p class="citation-venue">Published at NeurIPS 2026.</p>
     <div class="bibtex-wrap">
-      <button type="button" class="bibtex-copy" data-copy-target="#bibtex" aria-label="Copy BibTeX">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-        </svg>
-        <span>Copy</span>
-      </button>
-<pre id="bibtex"><code>@article{zhang2026beacon,
-  title   = {BEACON: Cross-Domain Co-Training of Generative Robot Policies via Best-Effort Adaptation},
-  author  = {Zhang, Antong and Qi, Han and Yang, Heng},
-  year    = {2026}
-  eprint = {2605.08571}, 
-  archivePrefix = {arXiv},
-  primaryClass  = {cs.RO},
-  url           = {https://arxiv.org/abs/2605.08571},
+      <button type="button" class="bibtex-copy" data-copy-target="#bibtex">Copy BibTeX</button>
+<pre id="bibtex"><code>@inproceedings{zhang2026beacon,
+  title     = {{BEACON}: Cross-Domain Co-Training of Generative Robot Policies
+               via Best-Effort Adaptation},
+  author    = {Zhang, Antong and Qi, Han and Yang, Heng},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2026},
+  url       = {https://arxiv.org/abs/2605.08571}
 }</code></pre>
     </div>
   </section>
 
 </main>
 
-
-<footer id="site-footer">
-  <p>
-    The website is built with
-    <a href="https://github.com/gated-memory-policy/gated-memory-policy.github.io"
-       target="_blank" rel="noopener">this template</a>,
-    licensed under a
-    <a href="https://creativecommons.org/licenses/by-sa/4.0/"
-       target="_blank" rel="noopener">CC BY-SA 4.0</a> license.
-  </p>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <a class="footer-logo" href="https://computationalrobotics.seas.harvard.edu/" target="_blank" rel="noopener">
+      <img src="assets/group-logo.png" alt="Computational Robotics Group, Harvard" width="320">
+    </a>
+    <p>
+      Robot meshes from the robosuite Panda model (MIT). Built with
+      <a href="https://threejs.org" target="_blank" rel="noopener">three.js</a>; layout adapted from
+      <a href="https://github.com/gated-memory-policy/gated-memory-policy.github.io" target="_blank" rel="noopener">this template</a>
+      (CC BY-SA 4.0).
+    </p>
+  </div>
 </footer>
 
+<div id="toast" role="status" aria-live="polite"></div>
 
-<div id="toast" role="status" aria-live="polite" aria-hidden="true"></div>
-
-<script src="main.js"></script>
+<script src="main.js" defer></script>
+<script type="module" src="robot.js"></script>
 </body>
 </html>
