@@ -104,11 +104,14 @@
     setActive();
   }
 
-  /* ── Hero video: pause the promo when it scrolls away ── */
+  /* ── Hero video: autoplays muted; pause off-screen, resume when back ── */
   var promo = document.getElementById('promo');
   if (promo && io) {
     new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) { if (!e.isIntersecting && !promo.paused) promo.pause(); });
-    }, { threshold: 0 }).observe(promo);
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { var p = promo.play(); if (p && p.catch) p.catch(function () {}); }
+        else if (!promo.paused) promo.pause();
+      });
+    }, { threshold: 0.25 }).observe(promo);
   }
 })();

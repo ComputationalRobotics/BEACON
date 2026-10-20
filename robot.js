@@ -6,7 +6,7 @@
  * subsampled. Scroll position in the "How it works" section selects the task
  * and scrubs the motion. Nothing here is a learned-policy rollout.
  */
-import * as THREE from 'three';
+import * as THREE from './assets/vendor/three.module.min.js';
 
 const canvas = document.getElementById('robot-canvas');
 const stage = canvas && canvas.closest('.stage-sticky');

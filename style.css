@@ -115,7 +115,9 @@ section h3 { font-size: 19px; font-weight: 600; letter-spacing: -.012em; line-he
 .section-head p, .method-head p { color: var(--graphite); }
 
 /* ───────── Hero ───────── */
-.hero { padding-top: 56px; }
+.hero { padding-top: 40px; }
+.hero-lab { display: inline-block; margin-bottom: 28px; }
+.hero-lab img { width: 230px; max-width: 60vw; }
 .hero-title {
   max-width: 760px;
   font-size: clamp(19px, 2.1vw, 26px);
@@ -313,7 +315,6 @@ section h3 { font-size: 19px; font-weight: 600; letter-spacing: -.012em; line-he
   padding: 36px var(--gutter) 48px;
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px 40px;
 }
-.footer-logo img { width: 300px; max-width: 70vw; }
 .site-footer p { font-size: 13.5px; color: var(--mist); max-width: 520px; line-height: 1.55; }
 .site-footer a { color: var(--graphite); }
 
